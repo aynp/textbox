@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const storedText = localStorage.getItem("savedText");
 
-  if (storedText) {
+  if (storedText !== null) {
     textarea.value = storedText;
   }
 
@@ -21,6 +21,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 2000);
       }
     }, 300);
+  });
+
+  window.addEventListener("beforeunload", function () {
+    clearTimeout(saveTimeout);
+    localStorage.setItem("savedText", textarea.value);
   });
 
   textarea.addEventListener("keydown", function (e) {
