@@ -7,9 +7,20 @@ document.addEventListener("DOMContentLoaded", function () {
     textarea.value = storedText;
   }
 
+  let saveTimeout;
   textarea.addEventListener("input", function () {
-    const currentText = textarea.value;
-    localStorage.setItem("savedText", currentText);
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(function () {
+      try {
+        localStorage.setItem("savedText", textarea.value);
+      } catch (e) {
+        console.warn("Failed to save to localStorage:", e);
+        textarea.style.backgroundColor = "red";
+        setTimeout(function () {
+          textarea.style.backgroundColor = "";
+        }, 2000);
+      }
+    }, 300);
   });
 
   textarea.addEventListener("keydown", function (e) {
