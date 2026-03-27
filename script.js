@@ -11,4 +11,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const currentText = textarea.value;
     localStorage.setItem("savedText", currentText);
   });
+
+  textarea.addEventListener("keydown", function (e) {
+    if (e.key === "Tab") {
+      e.preventDefault();
+      document.execCommand("insertText", false, "\t");
+    }
+  });
 });
+
