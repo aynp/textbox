@@ -1,18 +1,30 @@
+function getStorageKey() {
+  var path = window.location.pathname;
+
+  if (path.length > 1 && path.endsWith("/")) {
+    path = path.slice(0, -1);
+  }
+
+  return "savedText:" + path;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-  const textarea = document.getElementById("persistent");
+  var textarea = document.getElementById("persistent");
+  if (!textarea) return;
 
-  const storedText = localStorage.getItem("savedText");
+  var STORAGE_KEY = getStorageKey();
 
+  var storedText = localStorage.getItem(STORAGE_KEY);
   if (storedText !== null) {
     textarea.value = storedText;
   }
 
-  let saveTimeout;
+  var saveTimeout;
   textarea.addEventListener("input", function () {
     clearTimeout(saveTimeout);
     saveTimeout = setTimeout(function () {
       try {
-        localStorage.setItem("savedText", textarea.value);
+        localStorage.setItem(STORAGE_KEY, textarea.value);
       } catch (e) {
         console.warn("Failed to save to localStorage:", e);
         textarea.style.backgroundColor = "red";
@@ -25,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   window.addEventListener("beforeunload", function () {
     clearTimeout(saveTimeout);
-    localStorage.setItem("savedText", textarea.value);
+    localStorage.setItem(STORAGE_KEY, textarea.value);
   });
 
   textarea.addEventListener("keydown", function (e) {
